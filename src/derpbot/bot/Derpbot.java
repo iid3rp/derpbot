@@ -1,0 +1,64 @@
+package derpbot.bot;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+public class Derpbot {
+    private static String appId;
+    private static String publicKey;
+    private static String clientId;
+    private static int permission;
+    private static String token;
+    private static String secret;
+
+    static
+    {
+        try(InputStream is = Derpbot.class.getResourceAsStream("confidential.txt"))
+        {
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            appId = br.readLine().split(":")[1];
+            publicKey = br.readLine().split(":")[1];
+            clientId = br.readLine().split(":")[1];
+            permission = Integer.parseInt(br.readLine().split(":")[1]);
+            token = br.readLine().split(":")[1];
+            secret = br.readLine().split(":")[1];
+            br.close();
+        }
+        catch(IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static String getAppId()
+    {
+        return appId;
+    }
+
+    public static String getPublicKey()
+    {
+        return publicKey;
+    }
+
+    public static String getClientId()
+    {
+        return clientId;
+    }
+
+    public static int getPermission()
+    {
+        return permission;
+    }
+
+    public static String getToken()
+    {
+        return token;
+    }
+
+    public static String getSecret()
+    {
+        return secret;
+    }
+}

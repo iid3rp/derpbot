@@ -10,6 +10,8 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 public class SlashCommandExample extends ListenerAdapter {
 
     public static void registerCommands(JDA jda) {
@@ -53,13 +55,15 @@ public class SlashCommandExample extends ListenerAdapter {
                 });
                 break;
             case "say":
-                event.getHook().sendMessage(event.getOption("content").getAsString()).queue();
+                event.getHook().sendMessage(Objects.requireNonNull(event.getOption("content")).getAsString()).queue();
                 break;
             case "add":
-                int num1 = event.getOption("num1").getAsInt();
-                int num2 = event.getOption("num2").getAsInt();
+                int num1 = Objects.requireNonNull(event.getOption("num1")).getAsInt();
+                int num2 = Objects.requireNonNull(event.getOption("num2")).getAsInt();
                 event.getHook().sendMessage(String.valueOf(num1 + num2)).queue();
                 break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + event.getName());
         }
     }
 }
