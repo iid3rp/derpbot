@@ -9,5 +9,7 @@ public class Scratch
         System.out.println(Derpbot.getToken());
         String s = "dghjsdfh";
         System.out.println(s.split(" ")[0]);
+        String s2 = ";";
+        System.out.println(s.substring(0, 1));
     }
 }

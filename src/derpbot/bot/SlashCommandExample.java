@@ -31,6 +31,12 @@ public class SlashCommandExample extends ListenerAdapter {
                                 .setRequired(true)) //This command requires a parameter
         );
 
+        commands.addCommands(
+                Commands.slash("roll", "Rolls an imaginary dice as random")
+                        .addOptions(new OptionData(OptionType.INTEGER, "number", "Roll within a certain bound.")
+                                .setRequired(true)) //This command requires a parameter
+        );
+
 
         commands.addCommands(
                 Commands.slash("add", "Adds two numbers together")
@@ -56,6 +62,12 @@ public class SlashCommandExample extends ListenerAdapter {
                 break;
             case "say":
                 event.getHook().sendMessage(Objects.requireNonNull(event.getOption("content")).getAsString()).queue();
+                break;
+            case "roll":
+                event.getHook().sendMessage(
+                        "Rolled a " + Derpbot.getRandom().nextInt(
+                                Objects.requireNonNull(
+                                        event.getOption("number")).getAsInt())).queue();
                 break;
             case "add":
                 int num1 = Objects.requireNonNull(event.getOption("num1")).getAsInt();

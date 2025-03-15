@@ -1,6 +1,7 @@
 package derpbot.bot;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -14,7 +15,7 @@ public class Derpbot {
     private static int permission;
     private static String token;
     private static String secret;
-    private static String delimiter;
+    private static String delimiter = ";";
     private static Random random;
     private static LinkedList<String> list;
 
@@ -23,9 +24,8 @@ public class Derpbot {
         new Random();
         list = new LinkedList<>();
         random = new Random();
-        try(InputStream is = Derpbot.class.getResourceAsStream("confidential.txt"))
+        try(InputStream is = new FileInputStream(System.getProperty("user.home") + "/derpbot/config.txt"))
         {
-            assert is != null;
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
             appId = br.readLine().split(":")[1];
             publicKey = br.readLine().split(":")[1];
@@ -33,7 +33,6 @@ public class Derpbot {
             permission = Integer.parseInt(br.readLine().split(":")[1]);
             token = br.readLine().split(":")[1];
             secret = br.readLine().split(":")[1];
-            delimiter = br.readLine().split(":")[1];
             br.close();
         }
         catch(IOException e) {

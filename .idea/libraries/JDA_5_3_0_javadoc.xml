@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="JDA-5.3.0-javadoc">
-    <CLASSES />
-    <JAVADOC>
-      <root url="jar://$PROJECT_DIR$/lib/JDA-5.3.0-javadoc.jar!/" />
-    </JAVADOC>
-    <SOURCES />
-  </library>
-</component>
