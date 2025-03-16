@@ -51,13 +51,29 @@ public class MessageListener extends ListenerAdapter {
 
             if(cmd.equalsIgnoreCase("purge"))
                 messagePurge(event, channel, message);
+
+            if(cmd.equalsIgnoreCase("consoleHistory"))
+                printHistory(event, channel);
         }
 
-        if(messages[0].equalsIgnoreCase("<@" + Derpbot.getAppId() + ">"))
+        if(message.contains("<@" + Derpbot.getAppId() + ">"))
             getAiResponse(event, channel, message);
+
+        if(event.getMessage().getMessageReference() != null)
+            if(Objects.equals(Objects.requireNonNull(Objects.requireNonNull(
+                event.getMessage().getMessageReference()).getMessage()).getAuthor().getId(), Derpbot.getAppId()))
+                getAiResponse(event, channel, message);
 
         // debug
         System.out.println(Objects.requireNonNull(event.getMember()).getUser().getName() + ": " + message);
+    }
+
+    private void printHistory(MessageReceivedEvent event, MessageChannelUnion channel)
+    {
+        if(!Objects.requireNonNull(event.getMember()).getUser().getName().equals("iid3rp"))
+            return;
+        System.out.println(Gemini.printHistory(event, channel));
+        channel.sendMessage("Check console :3").setMessageReference(event.getMessage()).queue();
     }
 
     private void getAiResponse(MessageReceivedEvent event, MessageChannelUnion channel, String message)
@@ -71,7 +87,7 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
-        String response = Gemini.getResponse(Gemini.getCuratedString() + "\nCurrent prompt: " + cleanedMessage);
+        String response = Gemini.getResponse(Gemini.getCuratedString() + Gemini.printHistory(event, channel) + "\nCurrent prompt: " + cleanedMessage);
 
         channel.sendMessage(response)
                 .setMessageReference(event.getMessage())
