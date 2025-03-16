@@ -67,7 +67,7 @@ public class SlashCommandExample extends ListenerAdapter {
                 event.getHook().sendMessage(
                         "Rolled a " + Derpbot.getRandom().nextInt(
                                 Objects.requireNonNull(
-                                        event.getOption("number")).getAsInt())).queue();
+                                        event.getOption("number")).getAsInt() + 1)).queue();
                 break;
             case "add":
                 int num1 = Objects.requireNonNull(event.getOption("num1")).getAsInt();

@@ -1,6 +1,7 @@
 package derpbot.bot;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,6 +16,7 @@ public class Derpbot {
     private static int permission;
     private static String token;
     private static String secret;
+    private static String aiApiKey;
     private static String delimiter = ";";
     private static Random random;
     private static LinkedList<String> list;
@@ -24,7 +26,7 @@ public class Derpbot {
         new Random();
         list = new LinkedList<>();
         random = new Random();
-        try(InputStream is = new FileInputStream(System.getProperty("user.home") + "/derpbot/config.txt"))
+        try(InputStream is = new FileInputStream(System.getProperty("user.home") + File.separator + "derpbot" + File.separator +"config.txt"))
         {
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
             appId = br.readLine().split(":")[1];
@@ -33,6 +35,7 @@ public class Derpbot {
             permission = Integer.parseInt(br.readLine().split(":")[1]);
             token = br.readLine().split(":")[1];
             secret = br.readLine().split(":")[1];
+            aiApiKey = br.readLine().split(":")[1];
             br.close();
         }
         catch(IOException e) {
@@ -83,5 +86,10 @@ public class Derpbot {
     public static LinkedList<String> getList()
     {
         return list;
+    }
+
+    public static String getAiApiKey()
+    {
+        return aiApiKey;
     }
 }

@@ -96,7 +96,7 @@ public class MessageListener extends ListenerAdapter {
     {
         if(messages.length == 1)
             channel.sendMessage("Rolled a **#" +
-                    Derpbot.getRandom().nextInt(100) +
+                    Derpbot.getRandom().nextInt(101) +
                     "**.\n-# Rolling dice defaults between 0-100.").queue();
         else
             if(Try.parseInt(messages[1]))
@@ -104,7 +104,7 @@ public class MessageListener extends ListenerAdapter {
                         Derpbot.getRandom().nextInt(Integer.parseInt(messages[1])) +
                         "**.").queue();
             else channel.sendMessage("Rolled a **#" +
-                    Derpbot.getRandom().nextInt(100) +
+                    Derpbot.getRandom().nextInt(101) +
                     "**.\n-# Rolling dice defaults between 0-100.").queue();
         System.out.println(messages.length);
     }
