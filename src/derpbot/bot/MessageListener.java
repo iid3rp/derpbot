@@ -1,6 +1,7 @@
 
 package derpbot.bot;
 
+import derpbot.ai.Gemini;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -51,6 +52,30 @@ public class MessageListener extends ListenerAdapter {
             if(cmd.equalsIgnoreCase("purge"))
                 messagePurge(event, channel, message);
         }
+
+        if(messages[0].equalsIgnoreCase("<@" + Derpbot.getAppId() + ">"))
+            getAiResponse(event, channel, message);
+
+        // debug
+        System.out.println(Objects.requireNonNull(event.getMember()).getUser().getName() + ": " + message);
+    }
+
+    private void getAiResponse(MessageReceivedEvent event, MessageChannelUnion channel, String message)
+    {
+        // Extract the actual query by removing all bot mentions
+        String botMention = "<@" + Derpbot.getAppId() + ">";
+        String cleanedMessage = message.replace(botMention, "").trim();
+
+        if (cleanedMessage.isEmpty()) {
+            channel.sendMessage(Derpbot.getRandomHi()).setMessageReference(event.getMessage()).queue();
+            return;
+        }
+
+        String response = Gemini.getResponse(Gemini.getCuratedString() + "\nCurrent prompt: " + cleanedMessage);
+
+        channel.sendMessage(response)
+                .setMessageReference(event.getMessage())
+                .queue();
     }
 
     private void getMessageFromList(MessageChannelUnion channel, String[] messages)
@@ -136,7 +161,12 @@ public class MessageListener extends ListenerAdapter {
                 channel.sendMessage("You need `Manage Messages` permission to use this command.").queue();
                 return;
             }
-            int amount = Integer.parseInt(message.substring((Derpbot.getDelimiter() + "purge ").length()).split(" ")[1]);
+            if(!Try.parseInt(message.split(" ")[1]))
+            {
+                channel.sendMessage("`" + Derpbot.getDelimiter() + "purge [amount]`").queue();
+            }
+
+            int amount = Integer.parseInt(message.split(" ")[1]);
             if (amount < 2 || amount > 1000) {
                 channel.sendMessage("You can only delete between 2-1000 messages.").queue();
                 return;

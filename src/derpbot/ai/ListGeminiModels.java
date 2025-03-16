@@ -27,7 +27,7 @@ public class ListGeminiModels {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(LIST_MODELS_URL))
                     .header("Content-Type", "application/json")
-                    .GET() // Use GET for ListModels
+                    .GET()
                     .build();
 
             HttpResponse<String> response = null;

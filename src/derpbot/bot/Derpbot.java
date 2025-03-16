@@ -20,6 +20,8 @@ public class Derpbot {
     private static String delimiter = ";";
     private static Random random;
     private static LinkedList<String> list;
+    private static String aiKeyURL;
+    private static String[] hi = getDefaultHi();
 
     static
     {
@@ -36,6 +38,7 @@ public class Derpbot {
             token = br.readLine().split(":")[1];
             secret = br.readLine().split(":")[1];
             aiApiKey = br.readLine().split(":")[1];
+            aiKeyURL = br.readLine().split("::")[1];
             br.close();
         }
         catch(IOException e) {
@@ -91,5 +94,23 @@ public class Derpbot {
     public static String getAiApiKey()
     {
         return aiApiKey;
+    }
+
+    public static String getKeyURL()
+    {
+        return aiKeyURL + aiApiKey;
+    }
+
+    public static String[] getDefaultHi()
+    {
+        return new String[] {
+                ":3 hai", "haiiiii", "so true", "wsg", "Hello.", "hi", ":wave:",
+                ":pleading_face:", "owo", ":3" // might add some...
+        };
+    }
+
+    public static String getRandomHi()
+    {
+        return hi[random.nextInt(hi.length)];
     }
 }

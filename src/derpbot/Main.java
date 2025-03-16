@@ -1,5 +1,6 @@
 package derpbot;
 
+import derpbot.ai.Gemini;
 import derpbot.bot.Derpbot;
 import derpbot.bot.MessageListener;
 import derpbot.bot.SlashCommandExample;
@@ -23,7 +24,9 @@ public class Main {
 
         JDA jda = jdaBuilder.build();
 
+
         jda.awaitReady();
         SlashCommandExample.registerCommands(jda);
+        Gemini.startModel();
     }
 }
