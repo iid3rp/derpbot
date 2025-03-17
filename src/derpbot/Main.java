@@ -27,6 +27,7 @@ public class Main {
 
         jda.awaitReady();
         SlashCommandExample.registerCommands(jda);
+
         Gemini.startModel();
     }
 }
