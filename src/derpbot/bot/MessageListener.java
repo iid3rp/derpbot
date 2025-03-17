@@ -4,10 +4,12 @@ package derpbot.bot;
 import derpbot.ai.Gemini;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import util.History;
 
 import java.util.List;
 import java.util.Objects;
@@ -52,8 +54,10 @@ public class MessageListener extends ListenerAdapter {
             if(cmd.equalsIgnoreCase("purge"))
                 messagePurge(event, channel, message);
 
-            if(cmd.equalsIgnoreCase("consoleHistory"))
+            if(cmd.equalsIgnoreCase("console"))
                 printHistory(event, channel);
+
+
         }
 
         if(message.contains("<@" + Derpbot.getAppId() + ">"))
@@ -72,7 +76,7 @@ public class MessageListener extends ListenerAdapter {
     {
         if(!Objects.requireNonNull(event.getMember()).getUser().getName().equals("iid3rp"))
             return;
-        System.out.println(Gemini.printHistory(event, channel));
+        System.out.println(History.printHistory(event, channel));
         channel.sendMessage("Check console :3").setMessageReference(event.getMessage()).queue();
     }
 
@@ -87,7 +91,7 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
-        String response = Gemini.getResponse(Gemini.getCuratedString() + Gemini.printHistory(event, channel) + "\nCurrent prompt: " + cleanedMessage);
+        String response = Gemini.getResponse(Gemini.getCuratedString() + History.printHistory(event, channel) + "\nCurrent prompt: " + cleanedMessage);
 
         channel.sendMessage(response)
                 .setMessageReference(event.getMessage())

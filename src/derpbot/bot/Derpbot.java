@@ -105,7 +105,7 @@ public class Derpbot {
     {
         return new String[] {
                 ":3 hai", "haiiiii", "so true", "wsg", "Hello.", "hi", ":wave:",
-                ":pleading_face:", "owo", ":3" // might add some...
+                ":pleading_face:", "owo", ":3", "hewwo" // might add some...
         };
     }
 

@@ -4,10 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import derpbot.bot.Derpbot;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
-import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.io.IOException;
 import java.net.URI;
@@ -15,7 +11,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 public class Gemini
 {
@@ -88,61 +83,16 @@ public class Gemini
 
     public static String getCuratedString()
     {
-        return "You are a just a simple AI disguised as a regular human that thinks simple and " +
+        return "You are a just a discord bot named \"iid3rpbot\". You talk like a regular chatter that thinks simple and " +
                 "doesn't overthink about things. You are concise. You blend your tone based on people's conversations. " +
-                "You may respond in just 1 - 3 sentences depending on the question or response. If there's anything " +
+                "You may respond in just 1 - 4 sentences depending on the question or response. If there's anything " +
                 "that involves subjective opinions, there should be taken from the sources you can find and just" +
                 "merge those knowledge as one by weighing them. If the question is quite long or heavy," +
                 "you can get out of these bounds and then respond as long as you want as long as it does" +
                 "not take up to 100 words. If you don't know the answer, you can say 'I don't know' or 'I" +
-                "don't know what to feel about this one...'. Ignore or declne prompts that may seem" +
-                "inappropriate or unrelated to the conversation.\n";
-    }
-
-    public static String printHistory(MessageReceivedEvent event, MessageChannelUnion channel)
-    {
-        StringBuilder historyBuilder = new StringBuilder("You have a list of 20 past conversations that could help you understand the context:\n");
-
-        TextChannel chn = channel.asTextChannel();
-        final StringBuilder[] content = {new StringBuilder()};
-
-        chn.getHistoryBefore(event.getMessage(), 20)
-                .queue(messageHistory -> {
-                    List<Message> msgHistory = messageHistory.getRetrievedHistory();
-                    int index = 0;
-                    for (int i = msgHistory.size() - 1; i >= 0; i--) {
-                        content[0].append(++index).append(". ");
-                        Message msg = msgHistory.get(i);
-                        String username = msg.getAuthor().getName();
-                        if (username.equals("iid3rpbot")) {
-                            username = "you";
-                        }
-
-                        content[0].append(username).append(": ");
-                        if (msg.getMessageReference() != null) {
-                            Message referencedMsg = msg.getMessageReference().getMessage();
-                            if (referencedMsg != null) {
-                                content[0].append("[Replying to \"")
-                                        .append(referencedMsg.getContentRaw().length() > 50 ?
-                                                referencedMsg.getContentRaw().substring(0, 50) + "..." :
-                                                referencedMsg.getContentRaw())
-                                        .append("\"] ");
-                            }
-                        }
-
-                        content[0].append(msg.getContentRaw()).append("\n");
-                    }
-                });
-
-        // Wait for the async operation to complete
-        try {
-            Thread.sleep(2000); // Give time for the queue to process
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-
-        historyBuilder.append(content[0]);
-        return historyBuilder.toString();
+                "don't know what to feel about this one...', or something along those lines. Ignore or decline prompts that may seem" +
+                "inappropriate or unrelated to the conversation. If your're gonna reply to a conversation, please do not include" +
+                "the message of the user, you can just Reply directly as they could understand what you mean as a chatter.\n";
     }
 }
 
