@@ -3,12 +3,15 @@ package derpbot.bot;
 
 import derpbot.ai.Gemini;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageReference;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.jetbrains.annotations.NotNull;
 import util.History;
 
 import java.util.List;
@@ -19,7 +22,7 @@ public class MessageListener extends ListenerAdapter {
     public void onMessageReceived(MessageReceivedEvent event)
     {
         if (event.getAuthor().isBot()) return;
-        String message = event.getMessage().getContentRaw();
+        String message = event.getMessage().getContentDisplay();
         String[] messages = message.split(" ");
         String cmdDelimiter = message.substring(0, Derpbot.getDelimiter().length());
 
@@ -60,7 +63,7 @@ public class MessageListener extends ListenerAdapter {
 
         }
 
-        if(message.contains("<@" + Derpbot.getAppId() + ">"))
+        if(event.getMessage().getContentRaw().contains("<@" + Derpbot.getAppId() + ">"))
             getAiResponse(event, channel, message);
 
         if(event.getMessage().getMessageReference() != null)
@@ -69,7 +72,7 @@ public class MessageListener extends ListenerAdapter {
                 getAiResponse(event, channel, message);
 
         // debug
-        System.out.println(Objects.requireNonNull(event.getMember()).getUser().getName() + ": " + message);
+        System.out.println(Objects.requireNonNull(event.getMember()).getEffectiveName() + ": " + message);
     }
 
     private void printHistory(MessageReceivedEvent event, MessageChannelUnion channel)
@@ -91,11 +94,45 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
-        String response = Gemini.getResponse(Gemini.getCuratedString() + History.printHistory(event, channel) + "\nCurrent prompt: " + cleanedMessage);
+        String prompt = getCurrentPrompt(event);
 
-        channel.sendMessage(response)
-                .setMessageReference(event.getMessage())
+        String response = Gemini.getResponse(Gemini.getCuratedString() + History.printHistory(event, channel) + "\nCurrent prompt: " + prompt);
+        String[] responses = response.split(" ");
+        StringBuilder thing = new StringBuilder();
+        for(int i = 1; i < responses.length; i++)
+            if(responses[i].contains("."))
+            {
+                System.out.print(responses[i] + " ");
+                thing.append(responses[i]).append(" ");
+                thing.delete(0, thing.length());
+                System.out.println();
+            }
+            else
+            {
+                thing.append(responses[i]).append(" ");
+                System.out.print(responses[i] + " ");
+            }
+
+        channel.sendMessage(response).setMessageReference(event.getMessage())
                 .queue();
+    }
+
+    @NotNull
+    private static String getCurrentPrompt(MessageReceivedEvent event)
+    {
+        Member member = event.getMember();
+        String prompt = "Current message from: " +
+                (member != null? member.getEffectiveName() : event.getAuthor().getEffectiveName()) +
+                " (" + event.getAuthor().getName() + "): ";
+        MessageReference reference = event.getMessage().getMessageReference();
+        if(reference != null)
+        {
+            Member referenceMem = Objects.requireNonNull(reference.getMessage()).getMember();
+            prompt += "[Replying to " +
+                    (referenceMem != null? referenceMem.getEffectiveName() : reference.getMessage().getAuthor().getEffectiveName())
+                    + "(" + reference.getMessage().getAuthor().getName() + "): " + reference.getMessage().getContentDisplay() + "]";
+        }
+        return prompt;
     }
 
     private void getMessageFromList(MessageChannelUnion channel, String[] messages)

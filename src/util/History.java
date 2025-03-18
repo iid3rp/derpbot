@@ -46,13 +46,13 @@ public class History
 
                                         content.append("[Replying to ")
                                                 .append(refHandleName).append(" (").append(refHandleMention).append("): \"")
-                                                .append(referencedMsg.getContentRaw().length() > 50 ?
-                                                        referencedMsg.getContentRaw().substring(0, 50) + "..." :
-                                                        referencedMsg.getContentRaw())
+                                                .append(referencedMsg.getContentDisplay().length() > 50 ?
+                                                        referencedMsg.getContentDisplay().substring(0, 50) + "..." :
+                                                        referencedMsg.getContentDisplay())
                                                 .append("\"] ");
                                     }
                                 }
-                                content.append(msg.getContentRaw()).append("\n");
+                                content.append(msg.getContentDisplay()).append("\n");
                             }
                             future.complete(content.toString()); // Complete the future with the result
                         },
@@ -92,15 +92,16 @@ public class History
 
                             content.append("[Replying to ")
                                     .append(refHandleName).append(" (").append(refHandleMention).append("): \"")
-                                    .append(referencedMsg.getContentRaw().length() > 50 ?
-                                            referencedMsg.getContentRaw().substring(0, 50) + "..." :
-                                            referencedMsg.getContentRaw())
+                                    .append(referencedMsg.getContentDisplay().length() > 50 ?
+                                            referencedMsg.getContentDisplay().substring(0, 50) + "..." :
+                                            referencedMsg.getContentDisplay())
                                     .append("\"] ");
                         }
-                        content.append(msg.getContentRaw()).append("\n");
+                        content.append(msg.getContentDisplay()).append("\n");
                     }
                     future.complete(content.toString());
                 }, future::completeExceptionally);
+
 
         return future;
     }
